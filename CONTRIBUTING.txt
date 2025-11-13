@@ -1,0 +1,7 @@
+Last Updated: 2025-11-13
+
+CONTRIBUTING for:
+hydrograph_scale
+
+Include clear description of changes in commit.
+All contributions will be reviewed prior to merge.
