@@ -17,7 +17,7 @@ from functions import nwis_import,analyze_voldur,init_hydrograph_plot
 
 ### Begin User Input ###
 # Set Working Directory
-#os.chdir("C://Users//tclarkin//Documents//Resources//Complete_scripts//hydrograph_scale")
+# os.chdir(r"C://Users/jsaunders/code/hydrograph_scale/example")
 site_source = ["1954_edit.csv","1964_hydro.csv","1999_hydro.csv","2008_hydro.csv","2015_edit.csv"]
 
 # Hydrograph Settings

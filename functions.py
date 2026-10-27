@@ -539,7 +539,7 @@ def get_balanced_indices(vfa_durs, hydro):
     for d in range(0, len(vfa_durs)):
         print(f"Defining window for {vfa_durs[d]} hour duration")
         vol_dur = hydro.rolling(vfa_durs[d]).mean()
-        vol_dur_end = int(vol_dur.idxmax() + 1)
+        vol_dur_end = int(vol_dur.iloc[:,0].idxmax() + 1)
         vol_dur_beg = int(vol_dur_end - int(vfa_durs[d]))
         print("Begins at timestep", vol_dur_beg)
         print("Ends at timestep", vol_dur_end)
@@ -592,7 +592,7 @@ def balanced_scale(peak_rp, vfa_rp, hydro, balanced_idx, type="peaked", baseflow
         plt.fill_between([peak_idx - 0.5, peak_idx + 0.5], [peak_rp, peak_rp], color="grey", alpha=0.3,
                          label="Peak Location")
         for d in range(0, len(vfa_durs)):
-            plt.fill_between([balanced_idx[d, 1], balanced_idx[d, 2]], [vfa_rp[d], vfa_rp[d]], alpha=0.3,
+            plt.fill_between([balanced_idx[d, 1], balanced_idx[d, 2]], [vfa_rp.iloc[d], vfa_rp.iloc[d]], alpha=0.3,
                              label=f"{vfa_durs[d]} Window")
 
         plt.plot(hydro, color="black", label="0. Raw Hydrograph")
@@ -601,7 +601,7 @@ def balanced_scale(peak_rp, vfa_rp, hydro, balanced_idx, type="peaked", baseflow
 
     for d in range(0, len(vfa_durs)):
         print(f"Scaling to {vfa_durs[d]} timestep curve")
-        Q_rp = vfa_rp[d]
+        Q_rp = vfa_rp.iloc[d]
 
         # Handle the next duration below peak, simple scaling by volumes (excluding peak)
         if d == 0:
@@ -685,9 +685,9 @@ def balanced_scale(peak_rp, vfa_rp, hydro, balanced_idx, type="peaked", baseflow
 
         # Finally, check volume
         if abs(check_error(np.mean(output[int(balanced_idx[d, 1]):int(balanced_idx[d, 2])]),
-                           vfa_rp[d])) > 0.0001:  # greater than 0.0001 or 0.01% in CFS
+                           vfa_rp.iloc[d])) > 0.0001:  # greater than 0.0001 or 0.01% in CFS
             print("Volumes do not agree: ", np.round(
-                abs(check_error(np.mean(output[int(balanced_idx[d, 1]):int(balanced_idx[d, 2])]), vfa_rp[d])), 6),
+                abs(check_error(np.mean(output[int(balanced_idx[d, 1]):int(balanced_idx[d, 2])]), vfa_rp.iloc[d])), 6),
                   " error")
         else:
             print("Volume correction successful.")
@@ -747,7 +747,7 @@ def check_hydrographs(output, ffa, vfa, rps_in, hydro_in):
     for h in range(0, hydro_in.shape[1]):
         for r in range(0, len(rps_in)):
             hydro_check = pd.DataFrame(output[:, r, h])
-            hydro_vals[:, r, h] = calc_hydro(hydro_check, vfa_durs)
+            hydro_vals[:, r, h] = calc_hydro(hydro_check.iloc[:,0], vfa_durs)
             hydro_stats[0, r, h] = np.round(check_error(hydro_vals[0, r, h], ffa[r]), 4)
 
             for d in range(0, len(vfa_durs)):

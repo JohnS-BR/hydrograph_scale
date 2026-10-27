@@ -42,24 +42,29 @@ import matplotlib.pyplot as plt
 from functions import *
 
 ### Begin User Input ###
+
+
+# Set Working Directory
+os.chdir(r"C://Users/jsaunders/code/hydrograph_scale/example")
+
 # Set output name
-site = "scoggins"
+site = "example_01"
 
 # Define FFA Curve (should have same return periods as vfa)
-ffile = 'scoggins_ffa.csv'
+ffile = 'ffa.csv'
 ffa_col = "median"
 
 # Define VFA Curve (should have same return periods as ffa)
-vfile = 'scoggins_vfa.csv'
-vfa_col = "360"  # specify the column(s), columns names should be durations in hours (1, 2, etc.), used for volume scaling
+vfile = 'vfa.csv'
+vfa_col = "168"  # specify the column(s), columns names should be durations in hours (1, 2, etc.), used for volume scaling
 
 # Load Hydrograph(s)
-hfile = 'hydro_prep/input_hydrographs.csv'
+hfile = 'test_input_hydrographs.csv'
 hydro_sel = "all"  # List of which hydrographs to scale (column name) or "all"
-duration = 15  # hydrograph duration in days
+duration = 7  # hydrograph duration in days
 
 # Select Methods
-scaleby = "modpav"  # "peaks&volumes", "peaks", "volumes", "balanced", "peaksonly", "volumesonly", or "modpav"
+scaleby = "balanced"  # "peaks&volumes", "peaks", "volumes", "balanced", "peaksonly", "volumesonly", or "modpav"
 rp_sel = "all"  # "all" or list of RPs for which to produce hydrographs, must correspond to RPs in ffile and vfile
 baseflow = False  # True to include transition from baseflow to scaled hydrograph
 plotmin = 10
@@ -68,7 +73,7 @@ plotmax = 30000
 # Additional settings for balanced hydrographs
 plot_construct = True  # True to plot evolution of balanced hydrographs.
 type = "peaked"  # "peaked", "spiked", or "beard"
-balanced_cols = ["24", "72","120","168","360"]  # columns to be used for balance hydrographs
+balanced_cols = ["48","168"]  # columns to be used for balance hydrographs
 
 # check against PMF (if None, no calculation will be completed)
 pmf_peak = None  # int
@@ -102,7 +107,7 @@ hydro_in, hydro_sel = hydroclip(hfile, hydro_sel, duration)
 hydro_in_vals = np.zeros((len(vfa_durs) + 1, hydro_in.shape[1]))
 for h in range(hydro_in.shape[1]):
     hydro_check = pd.DataFrame(hydro_in[:, h])
-    hydro_in_vals[:, h] = calc_hydro(hydro_check, vfa_durs)
+    hydro_in_vals[:, h] = calc_hydro(hydro_check.iloc[:, 0], vfa_durs)
 
 hydro_in_vals = pd.DataFrame(hydro_in_vals)
 hydro_in_vals.index = all_durs

@@ -7,3 +7,6 @@ dependencies:
   - numpy=2.4
   - matplotlib=3.10
   - dataretrieval=1.1
+  - pip
+  - pip:
+    - probscale
