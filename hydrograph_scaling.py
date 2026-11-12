@@ -45,17 +45,20 @@ from functions import *
 
 
 # Set Working Directory
-os.chdir(r"C://Users/jsaunders/code/hydrograph_scale/example")
+#os.chdir(r"C://Users/jsaunders/code/hydrograph_scale/example")
+os.chdir(r"C://Users/jsaunders/code/hydrograph_scale/el_vado")
 
 # Set output name
 site = "example_01"
 
 # Define FFA Curve (should have same return periods as vfa)
-ffile = 'ffa.csv'
-ffa_col = "median"
+#ffile = 'ffa.csv'
+ffile = 'el_vado_ffa.csv'
+#ffa_col = "median"
+ffa_col = "post_pred"
 
 # Define VFA Curve (should have same return periods as ffa)
-vfile = 'vfa.csv'
+vfile = 'el_vado_vfa.csv'
 vfa_col = "168"  # specify the column(s), columns names should be durations in hours (1, 2, etc.), used for volume scaling
 
 # Load Hydrograph(s)
@@ -66,14 +69,14 @@ duration = 7  # hydrograph duration in days
 # Select Methods
 scaleby = "balanced"  # "peaks&volumes", "peaks", "volumes", "balanced", "peaksonly", "volumesonly", or "modpav"
 rp_sel = "all"  # "all" or list of RPs for which to produce hydrographs, must correspond to RPs in ffile and vfile
-baseflow = False  # True to include transition from baseflow to scaled hydrograph
+baseflow = True  # True to include transition from baseflow to scaled hydrograph
 plotmin = 10
 plotmax = 30000
 
 # Additional settings for balanced hydrographs
 plot_construct = True  # True to plot evolution of balanced hydrographs.
 type = "peaked"  # "peaked", "spiked", or "beard"
-balanced_cols = ["48","168"]  # columns to be used for balance hydrographs
+balanced_cols = ["96","168"]  # columns to be used for balance hydrographs
 
 # check against PMF (if None, no calculation will be completed)
 pmf_peak = None  # int
@@ -86,7 +89,7 @@ if not os.path.isdir("output"):
     os.mkdir("output")
 
 # Define duration
-if isinstance(duration//24,int):
+if isinstance(duration, (int, float)) and duration % 24 == 0:
     print(f"A duration of {duration} is evenly divisible by 24; Check that input duration is in days, NOT hours...")
 duration = int(duration * 24)
 
@@ -140,7 +143,7 @@ for h in range(0, hydro_in.shape[1]):
     hydro = hydro_in[:, h]
 
     if scaleby == "balanced":
-        vfa_durs = [int(i) for i in balanced_cols]  # get duratinos from selected column names
+        vfa_durs = [int(i) for i in balanced_cols]  # get durations from selected column names
         balanced_idx = get_balanced_indices(vfa_durs, hydro)
 
     for r in range(0, len(rps_in)):

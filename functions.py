@@ -191,6 +191,10 @@ def importfreq(ffile, vfile, rp_sel):
     vfa_raw = pd.read_csv(vfile)
 
     # Define rps, check that rps for vfa and ffa are identical
+    print(ffa_raw.iloc[:, 0])
+    print("")
+    print(vfa_raw.iloc[:, 0])
+
     if all(ffa_raw.iloc[:, 0] == vfa_raw.iloc[:, 0]):
         print("Return Periods Match: extracting selected return periods")
         rps = ffa_raw.loc[:, "rp"]
