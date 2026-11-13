@@ -49,7 +49,7 @@ from functions import *
 os.chdir(r"C://Users/jsaunders/code/hydrograph_scale/el_vado")
 
 # Set output name
-site = "example_01"
+site = "el_vado_analysis"
 
 # Define FFA Curve (should have same return periods as vfa)
 #ffile = 'ffa.csv'
@@ -62,7 +62,7 @@ vfile = 'el_vado_vfa.csv'
 vfa_col = "168"  # specify the column(s), columns names should be durations in hours (1, 2, etc.), used for volume scaling
 
 # Load Hydrograph(s)
-hfile = 'test_input_hydrographs.csv'
+hfile = 'el_vado_hydrographs.csv'
 hydro_sel = "all"  # List of which hydrographs to scale (column name) or "all"
 duration = 7  # hydrograph duration in days
 

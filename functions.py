@@ -212,7 +212,7 @@ def importfreq(ffile, vfile, rp_sel):
     return ffa, vfa, rps, aep
 
 
-def adj_baseflow(output, hydro, vol_method=0):
+def adj_baseflow(output, hydro, vol_method=1):
     """
     This function adjusts beginning and ending flows to transition smoothly from baseflow (the original ending and
     beginning flows on the input hydrograph).
@@ -285,7 +285,7 @@ def adj_baseflow(output, hydro, vol_method=0):
 
                 # Check volume again...
                 if abs(check_error(output.sum(), v_rp)) > 0.0001:  # greater than 0.0001 or 0.01% in CFS
-                    print(f"Volumes do not agree: {round(abs(check_error(output.sum(), v_rp)), 6)} error")
+                    print(f"1 Volumes do not agree: {round(abs(check_error(output.sum(), v_rp)), 6)} error")
                     print("Baseflow adjustment not recommended.")
                 else:
                     print("Volume correction successful.")
@@ -331,7 +331,7 @@ def peak_scale(peak_rp, hydro, baseflow=False):
 
     # Second, fix baseflow transition (if selected)
     if baseflow:
-        output = adj_baseflow(output, hydro, vol_method=0)
+        output = adj_baseflow(output, hydro, vol_method=1)
 
     # Third, check if peak is correct
     if abs(check_error(output.max(), peak_rp)) > 0.0001:  # greater than 0.0001 or 0.01%
@@ -373,7 +373,7 @@ def vol_scale(Q_rp, hydro, baseflow=False, partial=False):
 
     # Third, check if volume is correct
     if abs(check_error(output.mean(), Q_rp)) > 0.0001:  # greater than 0.0001 or 0.01% in CFS
-        print(f"Volumes do not agree: {round(abs(check_error(output.mean(), Q_rp)), 6)} error")
+        print(f"2 Volumes do not agree: {round(abs(check_error(output.mean(), Q_rp)), 6)} error")
     else:
         print("Volume scaling successful.")
     return output
@@ -413,7 +413,7 @@ def pav_scale(peak_rp, Q_rp, hydro, baseflow=False, partial=False):
 
     # Third, fix baseflow transition (if selected) and correct volumes
     if baseflow:
-        output = adj_baseflow(output, hydro, vol_method=0)
+        output = adj_baseflow(output, hydro, vol_method=1)
 
     # Fix negative flows
     if (any(output < 1)) or (pd.isna(output).any()):
@@ -422,7 +422,7 @@ def pav_scale(peak_rp, Q_rp, hydro, baseflow=False, partial=False):
 
     # Fourth, check if peak and volume are correct
     if abs(check_error(output.mean(), Q_rp)) > 0.0001:  # greater than 0.0001 or 0.01% in CFS
-        print(f"Volumes do not agree: {round(abs(check_error(output.mean(), Q_rp)), 6)} error")
+        print(f"3 Volumes do not agree: {round(abs(check_error(output.mean(), Q_rp)), 6)} error")
     else:
         print("Volume scaling successful.")
     if abs(check_error(output.max(), peak_rp)) > 0.0001:  # greater than 0.0001 or 0.01%
@@ -490,7 +490,7 @@ def volumeonly_scale(Q_rp,hydro):
 
     # Check if volume is correct
     if abs(check_error(output.mean(), Q_rp)) > 0.0001:  # greater than 0.0001 or 0.01%
-        print(f"Volumes do not agree: {round(abs(check_error(output.max(), Q_rp)), 6)} error")
+        print(f"4 Volumes do not agree: {round(abs(check_error(output.max(), Q_rp)), 6)} error")
     else:
         print("Volume scaling successful.")
     return output
@@ -518,7 +518,7 @@ def modified_pav_scale(peak_rp, Q_rp, hydro):
 
     # Fourth, check if peak and volume are correct
     if abs(check_error(output.mean(), Q_rp)) > 0.0001:  # greater than 0.0001 or 0.01% in CFS
-        print(f"Volumes do not agree: {round(abs(check_error(output.mean(), Q_rp)), 6)} error")
+        print(f"5 Volumes do not agree: {round(abs(check_error(output.mean(), Q_rp)), 6)} error")
     else:
         print("Volume scaling successful.")
     if abs(check_error(output.max(), peak_rp)) > 0.0001:  # greater than 0.0001 or 0.01%
@@ -672,7 +672,7 @@ def balanced_scale(peak_rp, vfa_rp, hydro, balanced_idx, type="peaked", baseflow
             # Use smooth transition from time 0 to start of next shorter duration
             if baseflow == False:
                 print("Baseflow transition must be applied for balanced method.")
-            output = adj_baseflow(output, hydro, vol_method=0)
+            output = adj_baseflow(output, hydro, vol_method=1)
 
         if plot_construct:
             itr += 1
@@ -690,7 +690,7 @@ def balanced_scale(peak_rp, vfa_rp, hydro, balanced_idx, type="peaked", baseflow
         # Finally, check volume
         if abs(check_error(np.mean(output[int(balanced_idx[d, 1]):int(balanced_idx[d, 2])]),
                            vfa_rp.iloc[d])) > 0.0001:  # greater than 0.0001 or 0.01% in CFS
-            print("Volumes do not agree: ", np.round(
+            print("6 Volumes do not agree: ", np.round(
                 abs(check_error(np.mean(output[int(balanced_idx[d, 1]):int(balanced_idx[d, 2])]), vfa_rp.iloc[d])), 6),
                   " error")
         else:
