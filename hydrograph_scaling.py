@@ -53,12 +53,12 @@ site = "el_vado_analysis"
 
 # Define FFA Curve (should have same return periods as vfa)
 #ffile = 'ffa.csv'
-ffile = 'paleo_vol_ten_k_el_vado_ffa.csv'
+ffile = 'el_vado_ffa.csv'
 #ffa_col = "median"
 ffa_col = "post_pred"
 
 # Define VFA Curve (should have same return periods as ffa)
-vfile = 'paleo_vol_ten_k_el_vado_vfa.csv'
+vfile = 'el_vado_vfa.csv'
 vfa_col = "168"  # specify the column(s), columns names should be durations in hours (1, 2, etc.), used for volume scaling
 
 # Load Hydrograph(s)
